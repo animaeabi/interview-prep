@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ford QA Interview - Quick Reference</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0d1117;color:#e6edf3;min-height:100vh}
+.header{background:#161b22;border-bottom:1px solid #30363d;padding:12px 20px;position:sticky;top:0;z-index:100}
+.header h1{font-size:18px;color:#58a6ff;margin-bottom:8px}
+.header .subtitle{font-size:12px;color:#8b949e}
+.search-box{width:100%;padding:10px 14px;background:#0d1117;border:1px solid #30363d;border-radius:8px;color:#e6edf3;font-size:15px;margin-top:8px;outline:none}
+.search-box:focus{border-color:#58a6ff;box-shadow:0 0 0 3px rgba(88,166,255,0.15)}
+.search-box::placeholder{color:#484f58}
+.tabs{display:flex;gap:4px;padding:8px 20px;background:#161b22;border-bottom:1px solid #30363d;overflow-x:auto;flex-wrap:nowrap}
+.tab{padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;white-space:nowrap;background:transparent;border:1px solid transparent;color:#8b949e;transition:all .2s}
+.tab:hover{color:#e6edf3;background:#21262d}
+.tab.active{background:#21262d;color:#58a6ff;border-color:#30363d}
+.content{padding:16px 20px;max-width:900px}
+.card{background:#161b22;border:1px solid #30363d;border-radius:10px;margin-bottom:12px;overflow:hidden;transition:border-color .2s}
+.card:hover{border-color:#484f58}
+.card-header{padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.card-header h3{font-size:14px;color:#e6edf3;font-weight:600}
+.card-tag{font-size:11px;padding:2px 8px;border-radius:12px;font-weight:500}
+.tag-star{background:#1f3a1f;color:#3fb950}
+.tag-technical{background:#1a2332;color:#58a6ff}
+.tag-process{background:#2d1f1a;color:#d29922}
+.tag-behavioral{background:#271a2d;color:#bc8cff}
+.tag-cheat{background:#1a2d2d;color:#39d2c0}
+.card-body{padding:0 16px 14px;display:none;font-size:13px;line-height:1.7;color:#c9d1d9}
+.card.open .card-body{display:block}
+.card-body strong{color:#58a6ff}
+.card-body .bullet{margin:6px 0 6px 16px;position:relative}
+.card-body .bullet::before{content:"▸";position:absolute;left:-14px;color:#484f58}
+.highlight{background:#4a3000;color:#f0c040;padding:0 2px;border-radius:2px}
+.card-body .example{background:#0d1117;border-left:3px solid #30363d;padding:8px 12px;margin:8px 0;border-radius:0 6px 6px 0;font-size:12px;color:#8b949e}
+.chevron{transition:transform .2s;color:#484f58;font-size:16px}
+.card.open .chevron{transform:rotate(90deg)}
+.no-results{text-align:center;padding:60px 20px;color:#484f58;font-size:15px}
+.quick-strip{display:flex;gap:6px;padding:8px 20px;overflow-x:auto;background:#0d1117}
+.quick-btn{padding:4px 10px;background:#21262d;border:1px solid #30363d;border-radius:6px;color:#8b949e;font-size:11px;cursor:pointer;white-space:nowrap}
+.quick-btn:hover{color:#e6edf3;border-color:#484f58}
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#484f58;padding:12px 0 6px;font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>Ford QA Interview Companion</h1>
+<div class="subtitle">SW QA Test - Android/Linux · Ford EVDD · Palo Alto · Tomorrow 4 PM</div>
+<input class="search-box" type="text" id="search" placeholder="Search keywords... (bluetooth, test plan, android, bug, linux, etc.)" autofocus>
+</div>
+
+<div class="tabs" id="tabs">
+<div class="tab active" data-cat="all">All</div>
+<div class="tab" data-cat="star">⭐ Tell Me About</div>
+<div class="tab" data-cat="technical">Technical</div>
+<div class="tab" data-cat="process">Process</div>
+<div class="tab" data-cat="behavioral">Behavioral</div>
+<div class="tab" data-cat="cheat">Cheat Sheet</div>
+</div>
+
+<div class="quick-strip">
+<div class="quick-btn" onclick="quickSearch('bluetooth')">Bluetooth</div>
+<div class="quick-btn" onclick="quickSearch('test plan')">Test Plan</div>
+<div class="quick-btn" onclick="quickSearch('bug report')">Bug Report</div>
+<div class="quick-btn" onclick="quickSearch('android')">Android</div>
+<div class="quick-btn" onclick="quickSearch('linux')">Linux</div>
+<div class="quick-btn" onclick="quickSearch('framework')">Framework</div>
+<div class="quick-btn" onclick="quickSearch('regression')">Regression</div>
+<div class="quick-btn" onclick="quickSearch('infotainment')">Infotainment</div>
+<div class="quick-btn" onclick="quickSearch('exploratory')">Exploratory</div>
+<div class="quick-btn" onclick="quickSearch('EV')">EV Testing</div>
+</div>
+
+<div class="content" id="content"></div>
+
+<script>
+const cards = [
+// === TELL ME ABOUT YOURSELF ===
+{
+cat:"star", tag:"Must-Have", tagClass:"tag-star",
+title:"Tell me about yourself / Walk me through your experience",
+body:`<strong>Opening (30 sec):</strong> "I'm a Senior QA Engineer with 6+ years across consumer electronics, automotive, and wearables — currently at Meta working on smart glasses and wearable devices."
+
+<div class="section-label">KEY BEATS TO HIT</div>
+<div class="bullet"><strong>Meta (Current)</strong> — Lead manual + automated QA across 7 wearable device families. Built a TypeScript E2E framework. Filed 120+ Bluetooth defects across A2DP, HFP, AVRCP. Deep Android/ADB experience with logcat, dumpsys, bugreport.</div>
+<div class="bullet"><strong>Tesla</strong> — QA on Autopilot computer vision. Automotive context. Worked with embedded systems, hardware/software integration, build flashing.</div>
+<div class="bullet"><strong>Emerge.io</strong> — Built QA org from scratch. Created 400+ test cases. Defined test strategy, test plans, regression suites.</div>
+<div class="bullet"><strong>Google</strong> — QA on ML classifiers. Large-scale data validation.</div>
+
+<div class="section-label">CLOSING TIE TO FORD</div>
+"Ford's infotainment work is a perfect intersection of my automotive background from Tesla and my deep device testing experience at Meta — Android systems, Bluetooth connectivity, multimedia, Linux debugging. I'm excited about the EV space and bringing that cross-domain experience to Ford EVDD."
+
+<div class="example">TIP: Keep it under 2 minutes. Hit Meta → Tesla → tie to Ford. Don't list every job.</div>`
+},
+
+// === TECHNICAL ===
+{
+cat:"technical", tag:"Technical", tagClass:"tag-technical",
+title:"How would you test a car infotainment Bluetooth audio system?",
+body:`<div class="section-label">STRUCTURED APPROACH</div>
+<div class="bullet"><strong>Pairing:</strong> First-time pair, re-pair, forget & re-pair, max paired devices (8+), pair while already connected to another device</div>
+<div class="bullet"><strong>Audio Streaming (A2DP):</strong> Play/pause/skip, codec quality (SBC, AAC, LDAC), audio interruptions (incoming call, navigation prompt), long-play stability (2+ hours), volume sync between phone and car</div>
+<div class="bullet"><strong>Hands-Free Calling (HFP):</strong> Incoming/outgoing calls, contact sync (PBAP), call audio quality, mic pickup, call during music, reject/hold/transfer</div>
+<div class="bullet"><strong>Remote Control (AVRCP):</strong> Steering wheel controls, metadata display (song title, artist), playlist navigation</div>
+<div class="bullet"><strong>Connectivity Edge Cases:</strong> Walk out of range and return, switch between two phones, Bluetooth + WiFi coexistence, airplane mode toggle, ignition on/off during streaming</div>
+<div class="bullet"><strong>Cross-Device:</strong> iPhone vs Android, old vs new BT versions (4.2, 5.0, 5.3), different phone models</div>
+
+<div class="example">PERSONAL HOOK: "At Meta, I filed 120+ Bluetooth defects across A2DP, HFP, and AVRCP on 7 device families — this is directly my wheelhouse."</div>`
+},
+{
+cat:"technical", tag:"Technical", tagClass:"tag-technical",
+title:"How do you debug a test failure using Android tools?",
+body:`<div class="section-label">MY DEBUGGING WORKFLOW</div>
+<div class="bullet"><strong>1. Reproduce:</strong> Run the test case again, note exact steps and system state</div>
+<div class="bullet"><strong>2. Capture logs:</strong> <code>adb logcat -v time > crash.log</code> — filter with <code>adb logcat *:E</code> for errors</div>
+<div class="bullet"><strong>3. System state:</strong> <code>adb shell dumpsys bluetooth_manager</code>, <code>dumpsys media.audio_flinger</code>, <code>dumpsys activity</code></div>
+<div class="bullet"><strong>4. Bug report bundle:</strong> <code>adb bugreport > bugreport.zip</code> — full system snapshot</div>
+<div class="bullet"><strong>5. Screenshot/screenrecord:</strong> <code>adb shell screenrecord /sdcard/test.mp4</code></div>
+<div class="bullet"><strong>6. Device info:</strong> <code>adb shell getprop</code> for build version, <code>adb shell settings list</code></div>
+
+<div class="example">KEY POINT: "I use ADB daily at Meta — logcat is my first stop for any device issue. I filter by tag and severity to isolate the component, then pull a full bugreport for the developers."</div>`
+},
+{
+cat:"technical", tag:"Technical", tagClass:"tag-technical",
+title:"Linux debugging for infotainment systems",
+body:`<div class="section-label">LINUX COMMANDS I'D USE</div>
+<div class="bullet"><strong>Logs:</strong> <code>journalctl -xe</code> (systemd logs), <code>dmesg</code> (kernel/hardware), <code>tail -f /var/log/syslog</code></div>
+<div class="bullet"><strong>Process:</strong> <code>ps aux | grep [service]</code>, <code>top</code>/<code>htop</code>, <code>systemctl status [service]</code></div>
+<div class="bullet"><strong>Network:</strong> <code>ip addr</code>, <code>nmcli</code>, <code>ping</code>, <code>ss -tulpn</code> (open ports)</div>
+<div class="bullet"><strong>Permissions:</strong> <code>ls -la</code>, <code>chmod</code>, <code>chown</code>, file ownership issues</div>
+<div class="bullet"><strong>Storage:</strong> <code>df -h</code>, <code>du -sh *</code>, <code>mount</code></div>
+<div class="bullet"><strong>Automotive Linux:</strong> AGL (Automotive Grade Linux), Yocto-based builds, systemd service management</div>
+
+<div class="example">BRIDGE: "While my primary focus has been Android, the Linux fundamentals transfer directly — I use CLI daily for log analysis and have automotive context from Tesla."</div>`
+},
+{
+cat:"technical", tag:"Technical", tagClass:"tag-technical",
+title:"What Bluetooth protocols are used in car infotainment?",
+body:`<div class="bullet"><strong>A2DP</strong> — Advanced Audio Distribution Profile. Streams high-quality stereo audio (music). Codecs: SBC, AAC, aptX, LDAC</div>
+<div class="bullet"><strong>HFP</strong> — Hands-Free Profile. Phone calls through car speakers/mic. Mono audio.</div>
+<div class="bullet"><strong>AVRCP</strong> — Audio/Video Remote Control Profile. Play/pause/skip from steering wheel or head unit. Metadata display.</div>
+<div class="bullet"><strong>PBAP</strong> — Phone Book Access Profile. Syncs contacts from phone to car display.</div>
+<div class="bullet"><strong>MAP</strong> — Message Access Profile. Displays text messages on the infotainment screen.</div>
+<div class="bullet"><strong>SPP</strong> — Serial Port Profile. General data transfer between devices.</div>
+
+<div class="example">MY EXPERIENCE: "At Meta I tested all of these extensively — A2DP audio streaming quality, HFP call handoff, AVRCP control mapping across 7 device families."</div>`
+},
+{
+cat:"technical", tag:"Technical", tagClass:"tag-technical",
+title:"EV-specific testing scenarios",
+body:`<div class="bullet"><strong>Battery/Range Display:</strong> Accuracy of range estimates, low battery warnings, charging status display on infotainment</div>
+<div class="bullet"><strong>Charging Management:</strong> Charging schedule UI, station finder integration, charging status notifications</div>
+<div class="bullet"><strong>Pre-conditioning:</strong> Remote climate control via app, scheduled cabin heating/cooling, battery pre-conditioning</div>
+<div class="bullet"><strong>Regen Braking Settings:</strong> UI for adjusting regenerative braking levels, display of energy recovery</div>
+<div class="bullet"><strong>OTA Updates:</strong> Software update notifications, download progress, install during charging, rollback on failure</div>
+<div class="bullet"><strong>Power Cycle Testing:</strong> System behavior on ignition on/off, sleep/wake, low-voltage battery scenarios</div>
+
+<div class="example">FORD CONTEXT: Ford SYNC system, Mach-E, F-150 Lightning. AAOS (Android Automotive OS) vs Android Auto — AAOS is built INTO the car, Android Auto mirrors from phone.</div>`
+},
+{
+cat:"technical", tag:"Technical", tagClass:"tag-technical",
+title:"How would you build an E2E test framework for infotainment?",
+body:`<div class="section-label">ARCHITECTURE</div>
+<div class="bullet"><strong>Device Abstraction Layer:</strong> Abstract device interactions so same tests work on different head units, phone models</div>
+<div class="bullet"><strong>Test Runner:</strong> Organize by feature area (BT, multimedia, nav), support parallel device combos</div>
+<div class="bullet"><strong>Logging & Evidence:</strong> Auto-capture logs, screenshots, video on failure. Attach to test report.</div>
+<div class="bullet"><strong>Cross-Device Orchestration:</strong> Coordinate phone + car head unit simultaneously (e.g., play music on phone → verify audio output on car)</div>
+<div class="bullet"><strong>Graceful Degradation:</strong> If one device disconnects, test marks as "environment failure" not "test failure"</div>
+<div class="bullet"><strong>CI/CD Integration:</strong> Run smoke suite on every build, full regression on nightly</div>
+
+<div class="example">MY EXPERIENCE: "At Meta I built a TypeScript E2E framework for wearables that handled 7 device families with a device abstraction layer — same pattern applies to car + phone combos."</div>`
+},
+
+// === PROCESS ===
+{
+cat:"process", tag:"Process", tagClass:"tag-process",
+title:"Walk me through how you create a test plan",
+body:`<div class="section-label">TEST PLAN STRUCTURE</div>
+<div class="bullet"><strong>1. Scope & Objectives:</strong> What are we testing? What's in/out of scope? Feature boundaries.</div>
+<div class="bullet"><strong>2. Test Strategy:</strong> Types of testing (functional, regression, smoke, exploratory). Risk-based prioritization.</div>
+<div class="bullet"><strong>3. Entry/Exit Criteria:</strong> When do we start? (Build stable, env ready). When are we done? (Pass rate, P0 bugs = 0)</div>
+<div class="bullet"><strong>4. Test Environment:</strong> Devices, OS versions, build versions, lab setup, test benches</div>
+<div class="bullet"><strong>5. Test Cases:</strong> Organized by feature area. Include preconditions, steps, expected results.</div>
+<div class="bullet"><strong>6. Schedule & Resources:</strong> Timeline, team assignments, dependencies</div>
+<div class="bullet"><strong>7. Risk & Mitigation:</strong> What could block us? Device availability, build delays, flaky environments.</div>
+
+<div class="example">PERSONAL: "At Emerge.io I built the QA org from scratch — created 400+ test cases and the test strategy that took us from zero to structured releases."</div>`
+},
+{
+cat:"process", tag:"Process", tagClass:"tag-process",
+title:"How do you write a good bug report?",
+body:`<div class="section-label">BUG REPORT TEMPLATE</div>
+<div class="bullet"><strong>Title:</strong> [Component] Short description of behavior — e.g., "[Bluetooth] A2DP audio drops after 30 min continuous playback"</div>
+<div class="bullet"><strong>Severity/Priority:</strong> P0-Critical, P1-High, P2-Medium, P3-Low. Severity = impact, Priority = urgency.</div>
+<div class="bullet"><strong>Environment:</strong> Device model, OS version, build number, firmware version</div>
+<div class="bullet"><strong>Steps to Reproduce:</strong> Numbered, exact steps. Include preconditions (e.g., "Phone paired via BT 5.0")</div>
+<div class="bullet"><strong>Expected vs Actual Result:</strong> Clear, specific. "Expected: Audio continues. Actual: Audio cuts out, BT shows connected."</div>
+<div class="bullet"><strong>Evidence:</strong> Logs (logcat output), screenshots, video, timestamps from logs</div>
+<div class="bullet"><strong>Frequency:</strong> "Reproducible 3/5 attempts" or "Intermittent"</div>
+
+<div class="section-label">BUG LIFECYCLE</div>
+New → Assigned → In Progress → Fixed → Verified → Closed (or Reopened)
+
+<div class="example">MY STANDARD: "At Meta I filed 120+ Bluetooth defects — every one had logcat output, exact repro steps, and device/build info. Developers could reproduce from my reports without asking follow-up questions."</div>`
+},
+{
+cat:"process", tag:"Process", tagClass:"tag-process",
+title:"Test strategy vs test plan vs test case — what's the difference?",
+body:`<div class="bullet"><strong>Test Strategy:</strong> HIGH LEVEL. Organization-wide approach. Defines testing types, tools, environments, risk approach. Rarely changes. Owned by QA lead/manager.</div>
+<div class="bullet"><strong>Test Plan:</strong> PROJECT LEVEL. Specific to a release or feature. Scope, schedule, entry/exit criteria, resources. Changes per cycle.</div>
+<div class="bullet"><strong>Test Case:</strong> EXECUTION LEVEL. Individual test with preconditions, steps, expected result. Atomic unit of testing.</div>
+
+<div class="example">ANALOGY: Strategy = "We drive on the right side of the road." Plan = "Route from A to B with stops." Test Case = "Turn left at 3rd light."</div>`
+},
+{
+cat:"process", tag:"Process", tagClass:"tag-process",
+title:"Explain your regression testing approach",
+body:`<div class="bullet"><strong>Identify scope:</strong> What changed? Map code changes to affected features and adjacent areas.</div>
+<div class="bullet"><strong>Risk-based prioritization:</strong> P0 flows first (core BT audio, calling, system boot), then P1 (settings, display), then P2 (edge cases).</div>
+<div class="bullet"><strong>Smoke first:</strong> Quick 30-min smoke suite to catch build-breakers before full regression.</div>
+<div class="bullet"><strong>Full regression:</strong> Complete suite organized by feature area. Track pass/fail/blocked.</div>
+<div class="bullet"><strong>Cross-device matrix:</strong> Run critical paths on multiple device combos (iPhone + car, Android + car, different BT versions).</div>
+<div class="bullet"><strong>Automation where stable:</strong> Automate repetitive stable paths, keep exploratory for new/changed areas.</div>
+
+<div class="example">MY APPROACH: "I prioritize based on risk and change impact. At Meta, when a firmware update dropped, I'd map the delta to affected BT profiles and focus regression there first."</div>`
+},
+
+// === BEHAVIORAL ===
+{
+cat:"behavioral", tag:"Behavioral", tagClass:"tag-behavioral",
+title:"Tell me about a challenging bug you found",
+body:`<div class="section-label">STORY: INTERMITTENT BLUETOOTH AUDIO DROP</div>
+<div class="bullet"><strong>Situation:</strong> At Meta, users reported audio randomly cutting out on smart glasses after ~30 minutes of music playback. No consistent repro.</div>
+<div class="bullet"><strong>Action:</strong> Set up a long-play test matrix — 5 different phone models, 3 BT codecs. Captured continuous logcat. After 40+ test runs, correlated the drop with a specific A2DP codec negotiation that happened when the phone's battery saver kicked in.</div>
+<div class="bullet"><strong>Result:</strong> Filed a detailed defect with log correlation, timing data, and exact repro conditions. Firmware team fixed the codec fallback logic. Reduced field complaints by 60%.</div>
+
+<div class="example">WHY THIS WORKS FOR FORD: Shows patience with intermittent issues, log analysis skills, systematic approach — exactly what they need for car infotainment debugging.</div>`
+},
+{
+cat:"behavioral", tag:"Behavioral", tagClass:"tag-behavioral",
+title:"How do you handle disagreements with developers?",
+body:`<div class="bullet"><strong>Lead with data:</strong> "Here's the log, here's the repro, here's the user impact." Never personal.</div>
+<div class="bullet"><strong>Severity alignment:</strong> If we disagree on priority, I bring user impact data and the acceptance criteria we agreed on.</div>
+<div class="bullet"><strong>Escalate with context:</strong> If still stuck, bring it to triage with both perspectives documented.</div>
+<div class="bullet"><strong>Collaborative mindset:</strong> "We're both trying to ship quality — let's figure out the right call together."</div>
+
+<div class="example">PERSONAL: "At Emerge.io, building the QA org from scratch meant I had to earn developer trust. I focused on writing bug reports so clear that devs WANTED to fix them — no ambiguity, always with logs and evidence."</div>`
+},
+{
+cat:"behavioral", tag:"Behavioral", tagClass:"tag-behavioral",
+title:"How do you prioritize when there's too much to test?",
+body:`<div class="bullet"><strong>Risk-based:</strong> What breaks the most? What has the highest user impact? Test that first.</div>
+<div class="bullet"><strong>Core user flows:</strong> The 80/20 rule — 20% of features used 80% of the time. Nail those.</div>
+<div class="bullet"><strong>Change-driven:</strong> New or modified code gets more attention than stable, unchanged areas.</div>
+<div class="bullet"><strong>Communicate tradeoffs:</strong> "We can cover all P0 and P1 scenarios. P2 will be exploratory only. Here's the risk we're accepting."</div>
+
+<div class="example">KEY PHRASE: "I never say 'we didn't test that.' I say 'here's what we covered, here's what we didn't, and here's why — along with the risk.'"</div>`
+},
+
+// === CHEAT SHEETS ===
+{
+cat:"cheat", tag:"Cheat Sheet", tagClass:"tag-cheat",
+title:"Testing Types Quick Reference",
+body:`<div class="bullet"><strong>Smoke Testing:</strong> Quick sanity check — does the build boot? Do core features work? Gate for further testing.</div>
+<div class="bullet"><strong>Sanity Testing:</strong> Narrow, focused check after a fix — did THIS specific thing get fixed?</div>
+<div class="bullet"><strong>Regression Testing:</strong> Verify existing features still work after changes.</div>
+<div class="bullet"><strong>Functional Testing:</strong> Does feature X do what the spec says?</div>
+<div class="bullet"><strong>Integration Testing:</strong> Do components work together? (Phone + car BT + audio system)</div>
+<div class="bullet"><strong>E2E Testing:</strong> Full user journey from start to finish.</div>
+<div class="bullet"><strong>Exploratory Testing:</strong> Unscripted, experience-driven. Find bugs the test cases miss.</div>
+<div class="bullet"><strong>Performance Testing:</strong> Speed, responsiveness, resource usage under load.</div>
+<div class="bullet"><strong>Stress Testing:</strong> Push beyond normal limits — what breaks?</div>
+<div class="bullet"><strong>Compatibility Testing:</strong> Different devices, OS versions, BT versions.</div>
+<div class="bullet"><strong>Usability Testing:</strong> Is it intuitive? Can a driver use it safely?</div>`
+},
+{
+cat:"cheat", tag:"Cheat Sheet", tagClass:"tag-cheat",
+title:"QA Process Keywords",
+body:`<div class="bullet"><strong>Shift Left:</strong> Start testing earlier in development — catch bugs when they're cheap to fix.</div>
+<div class="bullet"><strong>Definition of Ready (DoR):</strong> Criteria for a story to enter testing (build available, env set up, acceptance criteria clear).</div>
+<div class="bullet"><strong>Definition of Done (DoD):</strong> Criteria for a story to be "done" (all tests pass, no P0/P1 open, regression passed).</div>
+<div class="bullet"><strong>RTM (Requirements Traceability Matrix):</strong> Maps requirements → test cases. Ensures coverage.</div>
+<div class="bullet"><strong>Defect Leakage:</strong> Bugs that escape to production. Metric for QA effectiveness.</div>
+<div class="bullet"><strong>Test Coverage:</strong> % of requirements/code covered by tests.</div>
+<div class="bullet"><strong>CI/CD:</strong> Continuous Integration/Continuous Delivery — automated build, test, deploy pipeline.</div>
+<div class="bullet"><strong>Triage:</strong> Meeting to review, prioritize, and assign bugs.</div>
+<div class="bullet"><strong>Flashing Builds:</strong> Installing a new software build onto the device/head unit for testing.</div>
+<div class="bullet"><strong>HIL (Hardware-in-the-Loop):</strong> Test bench that simulates vehicle hardware for software testing.</div>`
+},
+{
+cat:"cheat", tag:"Cheat Sheet", tagClass:"tag-cheat",
+title:"Ford & Infotainment Keywords",
+body:`<div class="bullet"><strong>Ford SYNC:</strong> Ford's infotainment system. Currently SYNC 4 based on Android.</div>
+<div class="bullet"><strong>AAOS:</strong> Android Automotive OS — Android built INTO the car (not mirrored like Android Auto).</div>
+<div class="bullet"><strong>Android Auto vs CarPlay:</strong> Phone mirrors to car display. AAOS runs natively on the head unit.</div>
+<div class="bullet"><strong>IVI:</strong> In-Vehicle Infotainment system.</div>
+<div class="bullet"><strong>CAN Bus:</strong> Controller Area Network — vehicle communication protocol between ECUs.</div>
+<div class="bullet"><strong>OTA:</strong> Over-The-Air updates — remote software updates to the vehicle.</div>
+<div class="bullet"><strong>ECU:</strong> Electronic Control Unit — embedded computer in the vehicle.</div>
+<div class="bullet"><strong>EVDD:</strong> EV Digital Design — Ford's electric vehicle software division.</div>
+<div class="bullet"><strong>Head Unit:</strong> The main infotainment display/computer in the dashboard.</div>
+<div class="bullet"><strong>AGL:</strong> Automotive Grade Linux — open-source Linux platform for automotive.</div>
+<div class="bullet"><strong>Yocto:</strong> Build system for creating custom Linux distributions for embedded systems.</div>`
+},
+{
+cat:"cheat", tag:"Cheat Sheet", tagClass:"tag-cheat",
+title:"Questions YOU should ask the interviewer",
+body:`<div class="bullet">"What does a typical day look like for this role — how is testing organized across the team?"</div>
+<div class="bullet">"Which infotainment features or systems would I be focused on initially?"</div>
+<div class="bullet">"What's the current test environment setup — physical test benches, HIL, or vehicle testing?"</div>
+<div class="bullet">"How does the QA team collaborate with developers on bug triage and resolution?"</div>
+<div class="bullet">"What's the build cadence — how often do you get new software drops to test?"</div>
+<div class="bullet">"Is there opportunity for the contract role to convert to full-time?"</div>
+<div class="bullet">"What are the biggest testing challenges the team faces right now?"</div>
+
+<div class="example">TIP: Ask 2-3 of these. Shows genuine interest. Save the contract-to-FTE question for near the end.</div>`
+}
+];
+
+// Render
+function render(filter, search) {
+const el = document.getElementById('content');
+let html = '';
+let count = 0;
+cards.forEach((c, i) => {
+if (filter !== 'all' && c.cat !== filter) return;
+if (search) {
+const s = search.toLowerCase();
+if (!(c.title.toLowerCase().includes(s) || c.body.toLowerCase().includes(s))) return;
+}
+count++;
+html += `<div class="card" id="card-${i}" onclick="toggle(${i})">
+<div class="card-header">
+<h3>${highlightText(c.title, search)}</h3>
+<div style="display:flex;align-items:center;gap:8px">
+<span class="card-tag ${c.tagClass}">${c.tag}</span>
+<span class="chevron">›</span>
+</div>
+</div>
+<div class="card-body">${highlightText(c.body, search)}</div>
+</div>`;
+});
+if (count === 0) html = '<div class="no-results">No matches found. Try a different keyword.</div>';
+el.innerHTML = html;
+}
+
+function highlightText(text, search) {
+if (!search) return text;
+const regex = new RegExp(`(${search.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+return text.replace(regex, '<span class="highlight">$1</span>');
+}
+
+function toggle(i) {
+document.getElementById('card-'+i).classList.toggle('open');
+}
+
+function quickSearch(term) {
+document.getElementById('search').value = term;
+render(currentCat, term);
+}
+
+let currentCat = 'all';
+
+// Tab clicks
+document.querySelectorAll('.tab').forEach(tab => {
+tab.addEventListener('click', () => {
+document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+tab.classList.add('active');
+currentCat = tab.dataset.cat;
+render(currentCat, document.getElementById('search').value);
+});
+});
+
+// Search
+document.getElementById('search').addEventListener('input', (e) => {
+render(currentCat, e.target.value);
+});
+
+// Initial render
+render('all', '');
+
+// Keyboard shortcut: Escape clears search
+document.addEventListener('keydown', (e) => {
+if (e.key === 'Escape') {
+document.getElementById('search').value = '';
+render(currentCat, '');
+document.getElementById('search').focus();
+}
+});
+</script>
+</body>
+</html>
