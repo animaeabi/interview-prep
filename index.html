@@ -24,6 +24,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .card-header h3{font-size:14px;color:#e6edf3;font-weight:600}
 .card-tag{font-size:11px;padding:2px 8px;border-radius:12px;font-weight:500}
 .tag-star{background:#1f3a1f;color:#3fb950}
+.tag-starstory{background:#3a2f1f;color:#f0c040}
 .tag-technical{background:#1a2332;color:#58a6ff}
 .tag-process{background:#2d1f1a;color:#d29922}
 .tag-behavioral{background:#271a2d;color:#bc8cff}
@@ -55,6 +56,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div class="tabs" id="tabs">
 <div class="tab active" data-cat="all">All</div>
 <div class="tab" data-cat="star">⭐ Tell Me About</div>
+<div class="tab" data-cat="starstory">🎯 STAR Stories</div>
 <div class="tab" data-cat="technical">Technical</div>
 <div class="tab" data-cat="process">Process</div>
 <div class="tab" data-cat="behavioral">Behavioral</div>
@@ -62,6 +64,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 
 <div class="quick-strip">
+<div class="quick-btn" onclick="quickSearch('STAR')">⭐ STAR</div>
 <div class="quick-btn" onclick="quickSearch('bluetooth')">Bluetooth</div>
 <div class="quick-btn" onclick="quickSearch('test plan')">Test Plan</div>
 <div class="quick-btn" onclick="quickSearch('bug report')">Bug Report</div>
@@ -94,6 +97,175 @@ body:`<strong>Opening (30 sec):</strong> "I'm a Senior QA Engineer with 6+ years
 "Ford's infotainment work is a perfect intersection of my automotive background from Tesla and my deep device testing experience at Meta — Android systems, Bluetooth connectivity, multimedia, Linux debugging. I'm excited about the EV space and bringing that cross-domain experience to Ford EVDD."
 
 <div class="example">TIP: Keep it under 2 minutes. Hit Meta → Tesla → tie to Ford. Don't list every job.</div>`
+},
+
+// === STAR STORIES — Mapped to JD ===
+{
+cat:"starstory", tag:"Manual Test Plan", tagClass:"tag-starstory",
+title:"STAR — Tell me about a time you built a manual test plan from scratch",
+body:`<div class="section-label">SITUATION</div>
+When I joined Emerge.io as QA Lead, the company was in late Series A with no QA function — engineers were doing ad-hoc smoke testing before demos, and a major investor showcase was 5 months out.
+
+<div class="section-label">TASK</div>
+Build a complete manual test plan covering gesture recognition, haptic feedback, avatar interaction, and Unity/Unreal rendering across Quest and Vision Pro — and define what "release ready" actually meant.
+
+<div class="section-label">ACTION</div>
+<div class="bullet">Ran a 2-week discovery phase shadowing developers to understand feature boundaries and risk areas.</div>
+<div class="bullet">Authored 400+ manual test cases organized by feature area — each with preconditions, numbered steps, expected vs actual fields, and severity guidance.</div>
+<div class="bullet">Defined entry/exit criteria: smoke suite green, P0/P1 bug count = 0, regression pass rate ≥ 95%.</div>
+<div class="bullet">Built a risk-based prioritization model — gesture pipeline and haptic latency were P0 because they were demo-critical.</div>
+<div class="bullet">Presented the plan and quality metrics at each milestone review to the VP of Engineering and product leadership.</div>
+
+<div class="section-label">RESULT</div>
+We caught a critical gesture-pipeline memory leak during 48-hour stress testing — 2 weeks before the Series B investor demo. The plan became the QA org's standard for the next 2 years, and the team grew from 0 to 5 under it.
+
+<div class="example">JD MAPPING: "develop and execute manual test plans, including smoke testing, regression testing, and validation of high-risk scenarios"</div>`
+},
+{
+cat:"starstory", tag:"System State / Power Cycle", tagClass:"tag-starstory",
+title:"STAR — Time you validated high-risk system state changes (power, updates, state transitions)",
+body:`<div class="section-label">SITUATION</div>
+At Meta on Ray-Ban Stories, we were validating the imaging pipeline pre-launch. Reports came in of inconsistent shutter behavior under low-light conditions, but only after the device had been in continuous use for 20+ minutes.
+
+<div class="section-label">TASK</div>
+Reproduce the issue reliably across power states (cold boot, warm boot, low-battery, post-thermal-throttle) and isolate whether it was a state-transition bug or a steady-state defect.
+
+<div class="section-label">ACTION</div>
+<div class="bullet">Built a structured matrix of system states × lighting conditions × capture modes — 50+ combinations.</div>
+<div class="bullet">Ran continuous capture sessions for 30+ minutes per state to expose thermal and power-management transitions.</div>
+<div class="bullet">Captured ADB logs and sensor overlays during each transition to correlate the failure with specific events.</div>
+<div class="bullet">Isolated a 200ms+ shutter lag in HDR pipeline that only manifested after the thermal management subsystem stepped down clock speed.</div>
+<div class="bullet">Traced it to a buffer allocation bottleneck in the camera subsystem and filed the bug with full repro logs.</div>
+
+<div class="section-label">RESULT</div>
+Fix shipped in a pre-launch firmware update. Three firmware-level power management changes resulted from the test cycle. My ADB-based video logging with sensor overlay became the standard defect reporting template for the imaging QA team.
+
+<div class="example">JD MAPPING: "validation of high-risk scenarios such as system state changes, updates, and power cycles"</div>`
+},
+{
+cat:"starstory", tag:"Linux CLI / Debugging", tagClass:"tag-starstory",
+title:"STAR — Time you used Linux CLI tools to root-cause an issue",
+body:`<div class="section-label">SITUATION</div>
+At Meta on wearables, we had a test framework failure where 158 cross-device scripts were intermittently failing on glasses-only topologies. The framework masked the root cause — tests just timed out.
+
+<div class="section-label">TASK</div>
+Find why the same tests passed on phone+glasses topology but failed when only glasses were connected, and unblock the regression run before milestone freeze.
+
+<div class="section-label">ACTION</div>
+<div class="bullet">Used <code>adb logcat -v threadtime</code> and grep filters to isolate the exact API call that was hanging.</div>
+<div class="bullet">Ran <code>dumpsys</code> on the bluetooth and audio managers to confirm the phone-dependent service wasn't initialized.</div>
+<div class="bullet">Captured a full <code>adb bugreport</code> and used <code>journalctl</code>-style filtering on the host Linux side to correlate timestamps.</div>
+<div class="bullet">Wrote a Python log-parsing script to scan all 158 failures and confirm a single root cause: phone-dependent APIs being invoked without a topology guard.</div>
+<div class="bullet">Patched the framework with <code>typeof</code> checks and <code>guardPhoneCalls()</code> wrappers to gate phone-only APIs.</div>
+
+<div class="section-label">RESULT</div>
+All 158 runtime failures resolved across 3 test configurations. The guard pattern became the framework standard.
+
+<div class="example">JD MAPPING: "deep-dive troubleshooting on test failures using system logs, debugging tools, and Linux command-line utilities"</div>`
+},
+{
+cat:"starstory", tag:"Bug Report Quality", tagClass:"tag-starstory",
+title:"STAR — Time a high-quality bug report unblocked an engineering fix",
+body:`<div class="section-label">SITUATION</div>
+At Meta, I was triaging a flood of Bluetooth audio defects across A2DP, HFP, and LE Audio. The audio team was overwhelmed and pushing back on tickets as "can't reproduce."
+
+<div class="section-label">TASK</div>
+Restructure bug reports so each one was self-contained, actionable, and could be reproduced without a follow-up Slack thread.
+
+<div class="section-label">ACTION</div>
+<div class="bullet">Built a standard template: title in [Component] format, severity + priority, full env (device, OS, firmware build), numbered repro steps with preconditions, expected vs actual with timestamps.</div>
+<div class="bullet">Attached every ticket with: <code>adb bugreport</code> bundle, <code>logcat</code> filtered by component, screen recording, and a dumpsys snapshot of the relevant manager.</div>
+<div class="bullet">Added a "first failing build" field after bisecting using build flashing — narrowed regression range to under 5 builds.</div>
+<div class="bullet">For audio defects specifically, included the codec, profile, and connected-device topology.</div>
+
+<div class="section-label">RESULT</div>
+Filed 120+ Bluetooth audio defects with this format. "Can't reproduce" closures dropped to near zero. The template was adopted by 2 other QA teams. Engineering started referencing my bug reports as the example in onboarding.
+
+<div class="example">JD MAPPING: "Document and report defects with clear reproduction steps, expected vs. actual results, and supporting evidence such as logs and timestamps"</div>`
+},
+{
+cat:"starstory", tag:"HW/SW Integration", tagClass:"tag-starstory",
+title:"STAR — Time you set up a test bench / HIL environment",
+body:`<div class="section-label">SITUATION</div>
+At Emerge.io, regression runs took 2+ hours of manual setup per cycle — connecting Quest and Vision Pro, configuring log capture, mirroring builds, syncing test sessions. We had 8 firmware releases to validate in 6 months.
+
+<div class="section-label">TASK</div>
+Build a repeatable test bench setup that could parallelize log capture and device orchestration across mixed hardware.
+
+<div class="section-label">ACTION</div>
+<div class="bullet">Designed a Python orchestration tool that auto-detected connected devices via ADB and the Vision Pro developer bridge.</div>
+<div class="bullet">Standardized the physical test bench: labeled USB hubs, dedicated capture ports, named device serials, pre-flashed reference builds.</div>
+<div class="bullet">Automated parallel log capture — each device wrote to a timestamped directory with synchronized clocks for correlation.</div>
+<div class="bullet">Built a one-command setup script: flash, configure, launch, capture. Wrote a README for the rest of the team.</div>
+<div class="bullet">Added health checks at the start of every run — device connectivity, battery level, free storage, build integrity.</div>
+
+<div class="section-label">RESULT</div>
+Regression setup dropped from 2 hours to 20 minutes — an 83% reduction. The bench was reused across 8 firmware releases. Caught 23 SDK compatibility regressions and 4 breaking API changes before integration, preventing 2 release rollbacks.
+
+<div class="example">JD MAPPING: "Set up, configure, and maintain test environments, including hardware test benches"; "test bench setup or hardware-in-the-loop (HIL) environments is a plus"</div>`
+},
+{
+cat:"starstory", tag:"Regression / Smoke", tagClass:"tag-starstory",
+title:"STAR — Time you owned regression testing for a release",
+body:`<div class="section-label">SITUATION</div>
+At Meta on wearables audio, we had 6 product milestones to ship across 4 engineering teams (Audio, Firmware, Companion App, AI). Each milestone needed a regression pass on top of new feature validation — but the test suite was inconsistent across teams.
+
+<div class="section-label">TASK</div>
+Define QA strategy for the wearables audio vertical, including release quality gates and go/no-go criteria that worked across all 4 teams.
+
+<div class="section-label">ACTION</div>
+<div class="bullet">Built a tiered test strategy: smoke suite (15 min), targeted regression (2 hours), full regression (overnight).</div>
+<div class="bullet">Partnered with each team's eng lead to identify their top-10 high-risk regression areas and folded them into the suite.</div>
+<div class="bullet">Defined explicit go/no-go criteria — smoke 100%, regression ≥ 95%, no open P0/P1, no new crashes in 24-hour soak.</div>
+<div class="bullet">Triaged 120+ Bluetooth defects during the cycle, prioritizing by user-facing severity using A2DP/HFP/LE Audio profile context.</div>
+<div class="bullet">Held a daily 15-min triage with eng leads to escalate blockers fast.</div>
+
+<div class="section-label">RESULT</div>
+Shipped all 6 milestones on schedule. Zero P0 escapes to production. Quality gates were adopted org-wide as the audio vertical's standard.
+
+<div class="example">JD MAPPING: "Execute manual test cases, exploratory testing, and regression testing across a variety of use cases and system states"</div>`
+},
+{
+cat:"starstory", tag:"Build Flashing / E2E", tagClass:"tag-starstory",
+title:"STAR — Time you did end-to-end validation with build flashing",
+body:`<div class="section-label">SITUATION</div>
+At Meta on Ray-Ban Stories, every firmware build needed end-to-end imaging validation — but flashing was manual, error-prone, and developers were waiting on QA signal to merge.
+
+<div class="section-label">TASK</div>
+Streamline the build → flash → validate → report cycle so the imaging team had next-day signal on every nightly build.
+
+<div class="section-label">ACTION</div>
+<div class="bullet">Documented the flash procedure step-by-step including fastboot mode entry, build verification (checksum), and post-flash sanity check.</div>
+<div class="bullet">Built a smoke test specifically for post-flash validation — boots, camera initializes, photo capture works, BT pairs.</div>
+<div class="bullet">Ran end-to-end scenarios across 12 device configurations covering Scene 2.0 feature flag combinations.</div>
+<div class="bullet">Coordinated test access with 3 partner teams for pre-release VR social/presence platform validation.</div>
+<div class="bullet">Logged every flash + test cycle in a shared dashboard so engineering had visibility into pass/fail trends.</div>
+
+<div class="section-label">RESULT</div>
+Imaging team got next-morning signal on every nightly build. Caught 2 boot-blocking regressions in the same cycle they were introduced — would have surfaced days later otherwise.
+
+<div class="example">JD MAPPING: "Experience with hardware/software integration, including device setup, flashing builds, and end-to-end feature validation"</div>`
+},
+{
+cat:"starstory", tag:"Scripting / Log Parsing", tagClass:"tag-starstory",
+title:"STAR — Time you wrote a script to support testing (Python / shell)",
+body:`<div class="section-label">SITUATION</div>
+At Meta, real-hardware execution on smart glasses surfaced 6 categories of failures across 738 generated test scripts. Hand-inspecting each failure to categorize it would have taken weeks.
+
+<div class="section-label">TASK</div>
+Build a log parsing pipeline that could classify the failures, fix the underlying framework issues, and batch-repair the scripts.
+
+<div class="section-label">ACTION</div>
+<div class="bullet">Wrote a Python log parser that ingested logcat dumps from all 738 runs, extracted error signatures, and bucketed them into failure categories.</div>
+<div class="bullet">Identified 6 distinct root causes — proximity sensor API mismatch, audio stream timing, firmware-dependent dumpsys keys, etc.</div>
+<div class="bullet">Patched the framework APIs with multi-layer hardware abstraction (TDB-first, ADB dumpsys fallback) to handle each root cause.</div>
+<div class="bullet">Used the parser to verify the fix — re-ran, re-parsed, confirmed each category cleared.</div>
+<div class="bullet">Batch-repaired all 738 generated scripts with the updated framework calls.</div>
+
+<div class="section-label">RESULT</div>
+Execution pass rate jumped from 68% to 100%. Firmware-dependent test flakiness reduced by 72%. The log parser became part of the framework's diagnostic toolkit.
+
+<div class="example">JD MAPPING: "Basic scripting (e.g., Python or shell) is a plus for log parsing or test support tasks"</div>`
 },
 
 // === TECHNICAL ===
